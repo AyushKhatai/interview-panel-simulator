@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireMind — Multi-Agent AI Interview Panel Simulator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome & Lucide Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+    <!-- HEADER BAR -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-teal-500/20">
+                    <i class="fa-solid fa-users-gear text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-teal-400 bg-clip-text text-transparent">HireMind AI</h1>
+                    <p class="text-xs text-slate-400">Multi-Agent Executive Interview Panel Simulator</p>
+                </div>
+            </div>
+
+            <!-- Candidate Selector & Comparison Nav -->
+            <div class="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+                <button onclick="selectCandidate('A')" id="btn-cand-a" class="px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-teal-600 text-white shadow">
+                    <i class="fa-solid fa-user-tie"></i> Candidate A (Rohan)
+                </button>
+                <button onclick="selectCandidate('B')" id="btn-cand-b" class="px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i class="fa-solid fa-user-gear"></i> Candidate B (Maya)
+                </button>
+                <button onclick="selectComparison()" id="btn-comparison" class="px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-indigo-400 hover:bg-indigo-950/50">
+                    <i class="fa-solid fa-scale-balanced"></i> Rank Comparison
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-8 flex flex-col gap-6">
+
+        <!-- HERO SUMMARY CARDS -->
+        <div id="hero-summary-section" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 backdrop-blur flex flex-col justify-between">
+                <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Target Role & Company</span>
+                <div class="mt-2">
+                    <h2 class="text-lg font-bold text-white leading-tight" id="hero-target-role">AI Engineer — Agentic Systems</h2>
+                    <p class="text-xs text-teal-400 mt-1" id="hero-company">Cargonet AI (Freight Ops)</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 backdrop-blur flex flex-col justify-between">
+                <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Panel Recommendation</span>
+                <div class="mt-2 flex items-center gap-3">
+                    <span id="hero-verdict-badge" class="px-3.5 py-1.5 rounded-xl text-sm font-extrabold uppercase tracking-wide bg-red-500/20 text-red-400 border border-red-500/30">
+                        STRONG REJECT
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 backdrop-blur flex flex-col justify-between">
+                <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Weighed Score (Non-Average)</span>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-white" id="hero-score">1.7</span>
+                    <span class="text-slate-400 text-sm font-medium">/ 10</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 backdrop-blur flex flex-col justify-between">
+                <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Panel Confidence Level</span>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-teal-400" id="hero-confidence">94%</span>
+                    <span class="text-xs text-slate-400">High Consensus</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <div id="tabs-container" class="flex border-b border-slate-800 gap-6 text-sm font-medium">
+            <button onclick="switchTab('tab-evals')" id="tab-btn-evals" class="pb-3 border-b-2 border-teal-500 text-teal-400 flex items-center gap-2">
+                <i class="fa-solid fa-user-shield"></i> 1. Independent Persona Evaluations (Phase 1)
+            </button>
+            <button onclick="switchTab('tab-debate')" id="tab-btn-debate" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-comments"></i> 2. Live Debate & Opinion Changes (Phase 2)
+            </button>
+            <button onclick="switchTab('tab-decision')" id="tab-btn-decision" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-gavel"></i> 3. Weighed Decision & Report (Phase 3)
+            </button>
+            <button onclick="switchTab('tab-facts')" id="tab-btn-facts" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-quote-left"></i> 4. Evidence Hub & Quotes
+            </button>
+        </div>
+
+        <!-- TAB CONTENT 1: INDEPENDENT EVALUATIONS -->
+        <div id="tab-evals" class="tab-content flex flex-col gap-6">
+            <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4 flex items-start gap-3">
+                <i class="fa-solid fa-circle-info text-indigo-400 mt-1"></i>
+                <div class="text-xs text-indigo-200">
+                    <strong class="font-bold">Strict Isolation Rule:</strong> In Phase 1, all 4 agents (Technical, HR, Hiring Manager, Skeptic) evaluate the candidate independently in separate LLM calls. No agent accesses another agent's conclusions before the debate stage. Every claim is strictly backed by direct quotes from the transcript/resume.
+                </div>
+            </div>
+
+            <div id="persona-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamically populated persona cards -->
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 2: LIVE DEBATE & OPINION CHANGES -->
+        <div id="tab-debate" class="tab-content hidden flex flex-col gap-6">
+            <!-- Voice Debate Player Header -->
+            <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-400 text-xl">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Voice Debate Session Player</h3>
+                        <p class="text-xs text-slate-400">Listen to the 4 AI personas debate with distinct synthetic voices</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="btn-play-voice" onclick="playVoiceDebate()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
+                        <i class="fa-solid fa-play"></i> Play Voice Debate
+                    </button>
+                    <button id="btn-stop-voice" onclick="stopVoiceDebate()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-stop"></i> Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- Opinion Delta Log -->
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-5">
+                <h3 class="text-sm font-bold text-teal-400 uppercase tracking-wider flex items-center gap-2 mb-3">
+                    <i class="fa-solid fa-chart-line"></i> Opinion Change Tracker (Delta Log)
+                </h3>
+                <div id="opinion-deltas-container" class="flex flex-col gap-3">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Debate Feed -->
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-5 flex flex-col gap-4">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-indigo-400"></i> Panel Debate Transcript & Cross-Examination
+                </h3>
+                <div id="debate-feed" class="flex flex-col gap-4 max-h-[600px] overflow-y-auto pr-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 3: WEIGHED DECISION & REPORT -->
+        <div id="tab-decision" class="tab-content hidden flex flex-col gap-6">
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 flex flex-col gap-6">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-700/60 pb-5">
+                    <div>
+                        <span class="text-xs font-bold text-teal-400 uppercase tracking-wider">Final Decision Report</span>
+                        <h2 class="text-2xl font-black text-white mt-1" id="report-candidate-name">Candidate Evaluation</h2>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <div class="text-xs text-slate-400">Final Verdict</div>
+                            <div class="text-lg font-black text-white" id="report-recommendation">STRONG REJECT</div>
+                        </div>
+                        <div class="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex flex-col items-center justify-center text-teal-400 font-black text-lg" id="report-score-box">
+                            1.7
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Executive Summary -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">Executive Reasoning Summary</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed bg-slate-900/60 p-4 rounded-xl border border-slate-800" id="report-executive-summary">
+                        Summary text goes here...
+                    </p>
+                </div>
+
+                <!-- Strengths & Concerns Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-4">
+                        <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check"></i> Verified Key Strengths
+                        </h4>
+                        <ul id="report-strengths" class="text-xs text-emerald-200/90 flex flex-col gap-2 list-disc pl-4">
+                        </ul>
+                    </div>
+
+                    <div class="bg-rose-950/20 border border-rose-500/30 rounded-xl p-4">
+                        <h4 class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Critical Red Flags & Concerns
+                        </h4>
+                        <ul id="report-concerns" class="text-xs text-rose-200/90 flex flex-col gap-2 list-disc pl-4">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Non-Averaging Formula Explanation -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> Non-Averaging Weighed Reasoning Formula
+                    </h4>
+                    <p class="text-xs text-slate-400">
+                        Our decision engine does not simply average the 4 scores. It computes a base score weighted by agent confidence, and then applies specific deal-breaker penalties (e.g. anti-AI tool stance, blame deflection) or velocity bonuses.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 4: EVIDENCE HUB & QUOTES -->
+        <div id="tab-facts" class="tab-content hidden flex flex-col gap-6">
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 flex flex-col gap-6">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-file-contract text-teal-400"></i> Extracted Profile Facts & Transcript Evidence
+                </h3>
+                <div id="quotes-list" class="flex flex-col gap-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARISON VIEW (Hidden by default) -->
+        <div id="section-comparison" class="hidden flex flex-col gap-6">
+            <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/30 rounded-2xl p-6 shadow-xl">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 uppercase tracking-wider">
+                        Comparative Ranking
+                    </span>
+                </div>
+                <h2 class="text-2xl font-black text-white" id="comp-winner-title">Top Selected Candidate: Maya Lin</h2>
+                <p class="text-sm text-slate-300 mt-2" id="comp-rationale">Rationale text...</p>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 overflow-x-auto">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Side-by-Side Evaluation Matrix</h3>
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-700 text-slate-400 uppercase tracking-wider">
+                            <th class="py-3 px-4">Evaluation Dimension</th>
+                            <th class="py-3 px-4">Candidate A (Rohan Malhotra)</th>
+                            <th class="py-3 px-4">Candidate B (Maya Lin)</th>
+                            <th class="py-3 px-4">Winning Candidate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comp-table-body" class="divide-y divide-slate-800 text-slate-300">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        HireMind Multi-Agent AI Interview Panel Simulator &bull; Built for Cargonet AI Hiring Evaluation
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

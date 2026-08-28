@@ -1,0 +1,61 @@
+/* HireMind Custom Styling */
+
+body {
+    background-color: #0b0f19;
+    color: #cbd5e1;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Persona Color Accents */
+.persona-tech {
+    border-top: 4px solid #3b82f6;
+}
+.persona-hr {
+    border-top: 4px solid #ec4899;
+}
+.persona-hm {
+    border-top: 4px solid #10b981;
+}
+.persona-skeptic {
+    border-top: 4px solid #f59e0b;
+}
+
+/* Quote Callout Box */
+.quote-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-left: 3px solid #14b8a6;
+    padding: 0.75rem 1rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    font-style: italic;
+}
+
+/* Speech Bubble styling for Debate Feed */
+.debate-bubble {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.debate-bubble.opinion_change {
+    background: rgba(79, 70, 229, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 3px;
+}
